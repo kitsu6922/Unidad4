@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: #1A1415;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller_Login">
+   <children>
+      <Label alignment="CENTER" layoutY="14.0" prefWidth="300.0" text="BIENVENIDO" textFill="#beff30">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutY="50.0" prefWidth="300.0" text="INICIA SESIÓN" textFill="#beff30">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <JFXTextField fx:id="txt_usuario" alignment="CENTER" focusColor="#1a1415" labelFloat="true" layoutX="25.0" layoutY="120.0" prefHeight="50.0" prefWidth="250.0" promptText="USUARIO" style="-fx-background-color: #243E45; -fx-text-inner-color: #4DBF93; -fx-prompt-text-fill: #000; -fx-background-radius: 30; -fx-border-radius: 30;" unFocusColor="#4dbf93">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </JFXTextField>
+      <JFXButton buttonType="RAISED" layoutX="50.0" layoutY="300.0" onAction="#accion_inicio" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #4DBF93; -fx-background-radius: 30;" text="INICIAR SESIÓN" textFill="#243e45">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </JFXButton>
+      <JFXPasswordField fx:id="txt_contrasenia" alignment="CENTER" focusColor="#1a1415" labelFloat="true" layoutX="25.0" layoutY="210.0" prefHeight="50.0" prefWidth="250.0" promptText="CONTRASEÑA" style="-fx-background-color: #243E45; -fx-text-inner-color: #4DBF93; -fx-prompt-text-fill: #000; -fx-background-radius: 30; -fx-border-radius: 30;" unFocusColor="#4dbf93">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </JFXPasswordField>
+      <JFXButton buttonType="RAISED" layoutX="50.0" layoutY="360.0" onAction="#accion_mostrar" prefHeight="20.0" prefWidth="200.0" text="¿Olvidaste tu contraseña?" textFill="#beff30" underline="true">
+         <font>
+            <Font name="System Bold" size="9.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+   </children>
+</AnchorPane>
