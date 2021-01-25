@@ -44,7 +44,7 @@ public class Controller_Principal {
     TableView tabla_ref_com;
     @FXML
     TableColumn columna_refaccioninv_codigo, columna_refaccioninv_tproducto, columna_refaccioninv_mproducto, columna_refaccioninv_datos, columna_refaccioninv_descripcion, columna_refaccioninv_cantidad, columna_refaccioninv_precio;
-    Queue<Refaccion> refacciones_compras = new LinkedList<>();
+    Stack<Refaccion> refacciones_compras = new Stack<>();
     ObservableList<Refaccion> refacciones_compras_ol = FXCollections.observableArrayList(refacciones_compras);
     double total_refacciones = 0, descuentos_refacciones = 0;
     //panel ventas
@@ -448,7 +448,7 @@ public class Controller_Principal {
         int r = refacciones_compras.size();
         for (int f = 0; f < r; f++) {
             refacciones_ventas.add(new Refaccion(refacciones_compras.peek().getCodigo(), refacciones_compras.peek().getT_Producto(), refacciones_compras.peek().getM_Producto(), refacciones_compras.peek().getDatos(), refacciones_compras.peek().getDescripcion(), refacciones_compras.peek().getCantidad(), refacciones_compras.peek().getPrecio()));
-            refacciones_compras.poll();
+            refacciones_compras.pop();
         }
         total = total + (total_refacciones - descuentos_refacciones);
         txt_menu_total.setText("$" + total);
@@ -472,11 +472,11 @@ public class Controller_Principal {
             for (int f2 = 0; f2 < r2; f2++) {
                 if (refacciones_inventario.get(f2).getCodigo().equals(codigo)) {
                     refacciones_inventario.get(f2).setCantidad(refacciones_inventario.get(f2).getCantidad() + 1);
-                    refacciones_compras.poll();
+                    refacciones_compras.pop();
                     comprobar = true;
                 }
             }
-            if (!comprobar) refacciones_inventario.add(refacciones_compras.poll());
+            if (!comprobar) refacciones_inventario.add(refacciones_compras.pop());
         }
         refacciones_compras_ol.clear();
         refacciones_compras_ol.setAll(refacciones_compras);
@@ -518,6 +518,94 @@ public class Controller_Principal {
 
     }
 
+    //panel ventas
+    public void accion_refacciones_ventas_ordenar_codigo(){
+        int x, y;
+        for (x = 0 ; x < refacciones_ventas.size()-1; x++){
+            for (y = x+1 ; y < refacciones_ventas.size(); y++){
+                if (refacciones_ventas.get(x).getCodigo().compareToIgnoreCase(refacciones_ventas.get(y).getCodigo())>=1) {
+                    Refaccion refaccion;
+                    refaccion=refacciones_ventas.get(x);
+                    refacciones_ventas.set(x,refacciones_ventas.get(y));
+                    refacciones_ventas.set(y,refaccion);
+                }
+            }
+        }
+    }
+    public void accion_refacciones_ventas_ordenar_tipo(){
+        int im, x, y;
+        for (x = 0; x < refacciones_ventas.size()-1; x++) {
+            im=x;
+            for (y = x+1; y < refacciones_ventas.size(); y++){
+                if (refacciones_ventas.get(y).getT_Producto().compareToIgnoreCase(refacciones_ventas.get(im).getT_Producto()) <= -1) {
+                    im = y;
+                }
+            }
+            if (x != im){
+                Refaccion refaccion;
+                refaccion=refacciones_ventas.get(x);
+                refacciones_ventas.set(x,refacciones_ventas.get(im));
+                refacciones_ventas.set(im,refaccion);
+            }
+        }
+    }
+    public void accion_refacciones_ventas_ordenar_marca(){
+        int x, y;
+        for(x=0;x<refacciones_ventas.size()-1;x++)
+            for(y=0;y<refacciones_ventas.size()-x-1;y++)
+                if(refacciones_ventas.get(y+1).getM_Producto().compareToIgnoreCase(refacciones_ventas.get(y).getM_Producto())<=-1){
+                    Refaccion refaccion;
+                    refaccion=refacciones_ventas.get(y+1);
+                    refacciones_ventas.set(y+1,refacciones_ventas.get(y));
+                    refacciones_ventas.set(y,refaccion);
+                }
+    }
+    public void accion_refacciones_ventas_ordenar_datos(){
+        int intervalo, x, y, z;
+        intervalo = refacciones_ventas.size() / 2;
+        while (intervalo > 0){
+            for (x = intervalo; x < refacciones_ventas.size(); x++) {
+                y = x - intervalo;
+                while (y >= 0) {
+                    z = y + intervalo;
+                    if (refacciones_ventas.get(y).getDatos().compareToIgnoreCase(refacciones_ventas.get(z).getDatos())<=0){
+                        y = -1;
+                    }else{
+                        Refaccion refaccion;
+                        refaccion=refacciones_ventas.get(y);
+                        refacciones_ventas.set(y,refacciones_ventas.get(y+1));
+                        refacciones_ventas.set(y+1,refaccion);
+                        y -= intervalo;
+                    }
+                }
+            }
+            intervalo = intervalo / 2;
+        }
+    }
+    public void accion_refacciones_ventas_ordenar_descripcion(){
+        int x, y;
+        for (x = 0 ; x < refacciones_ventas.size()-1; x++){
+            for (y = x+1 ; y < refacciones_ventas.size(); y++){
+                if (refacciones_ventas.get(x).getDescripcion().compareToIgnoreCase(refacciones_ventas.get(y).getDescripcion())>=1) {
+                    Refaccion refaccion;
+                    refaccion=refacciones_ventas.get(x);
+                    refacciones_ventas.set(x,refacciones_ventas.get(y));
+                    refacciones_ventas.set(y,refaccion);
+                }
+            }
+        }
+    }
+    public void accion_refacciones_ventas_ordenar_precio(){
+        int x, y;
+        for(x=0;x<refacciones_ventas.size()-1;x++)
+            for(y=0;y<refacciones_ventas.size()-x-1;y++)
+                if(refacciones_ventas.get(y+1).getPrecio()<refacciones_ventas.get(y).getPrecio()){
+                    Refaccion refaccion;
+                    refaccion=refacciones_ventas.get(y+1);
+                    refacciones_ventas.set(y+1,refacciones_ventas.get(y));
+                    refacciones_ventas.set(y,refaccion);
+                }
+    }
     //paneles reparaciones ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void reparaciones_menu_reparaciones() {
         panel_reparacion_reparaciones.setVisible(true);
@@ -561,6 +649,74 @@ public class Controller_Principal {
         for (int f = 0; f < reparacion_clientes.size(); f++)cb_rep_reg_id.getItems().addAll(reparacion_clientes.get(f).getID());
         tabla_rep_cli.refresh();
         tabla_rep_reg.refresh();
+    }
+    public void accion_reparaciones_clientes_ordenar_nombre(){
+        ordenarNombresClientes(reparacion_clientes,0,reparacion_clientes.size()-1);
+    }
+    public void accion_reparaciones_clientes_ordenar_id(){
+        ordenarIdClientes(reparacion_clientes,0,reparacion_clientes.size()-1);
+    }
+    public void ordenarNombresClientes(ObservableList<Cliente> reparacion_clientes, int n1, int n2){
+        int x,y,z;
+        String cliente;
+        z=(n1+n2)/2;
+        cliente=reparacion_clientes.get(z).getNombres();
+        x=n1;
+        y=n2;
+        do{
+            while(reparacion_clientes.get(x).getNombres().compareTo(cliente)==-1){
+                x++;
+            }
+            while(reparacion_clientes.get(y).getNombres().compareTo(cliente)==1){
+                y--;
+            }
+            if(x<=y){
+                Cliente aux;
+                aux= reparacion_clientes.get(x);
+                reparacion_clientes.set(x,reparacion_clientes.get(y));
+                reparacion_clientes.set(y,aux);
+                x++;
+                y--;
+            }
+        }while(x<=y);
+        if(n1<y){
+            ordenarNombresClientes(reparacion_clientes,n1,y);
+        }
+        if(x<n2){
+            ordenarNombresClientes(reparacion_clientes,x,n2);
+        }
+
+    }
+    public void ordenarIdClientes(ObservableList<Cliente> reparacion_clientes, int n1, int n2){
+        int x,y,z;
+        int cliente;
+        z=(n1+n2)/2;
+        cliente=reparacion_clientes.get(z).getID();
+        x=n1;
+        y=n2;
+        do{
+            while(reparacion_clientes.get(x).getID()<cliente){
+                x++;
+            }
+            while(reparacion_clientes.get(y).getID()>cliente){
+                y--;
+            }
+            if(x<=y){
+                Cliente aux;
+                aux= reparacion_clientes.get(x);
+                reparacion_clientes.set(x,reparacion_clientes.get(y));
+                reparacion_clientes.set(y,aux);
+                x++;
+                y--;
+            }
+        }while(x<=y);
+        if(n1<y){
+            ordenarIdClientes(reparacion_clientes,n1,y);
+        }
+        if(x<n2){
+            ordenarIdClientes(reparacion_clientes,x,n2);
+        }
+
     }
     //registro
     public void accion_reparaciones_registro_guardar(){
@@ -683,20 +839,34 @@ public class Controller_Principal {
     }
 
     public void accion_autos_inventario_eliminar() {
-        boolean ri_codigo = false;
-        for (int f = 0; f < autos_inventario.size(); f++)
-            if (autos_inventario.get(f).getNIV().equals(txt_aut_inv_niv.getText())) {
-                autos_inventario.remove(f);
-            } else {
-                ri_codigo = true;
+        int x, y;
+        for(x=0;x<autos_inventario.size()-1;x++){
+            for(y=0;y<autos_inventario.size()-x-1;y++){
+                if(autos_inventario.get(y+1).getNIV().compareToIgnoreCase(autos_inventario.get(y).getNIV())<=-1){
+                    Auto auto;
+                    auto=autos_inventario.get(y+1);
+                    autos_inventario.set(y+1,autos_inventario.get(y));
+                    autos_inventario.set(y,auto);
+                }
             }
-        if (ri_codigo) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "No se encontro ningun articulo con dicho codigo", ButtonType.OK);
-            alert.show();
         }
-        cb_aut_com_niv.getItems().clear();
-        for (int f = 0; f < autos_inventario.size(); f++)
-            cb_aut_com_niv.getItems().addAll(autos_inventario.get(f).getNIV());
+
+        int centro,inf=0,sup=autos_inventario.size()-1;
+        while(inf<=sup){
+            centro=(sup+inf)/2;
+            if(autos_inventario.get(centro).getNIV().equals(txt_aut_inv_niv.getText())){
+                autos_inventario.remove(centro);
+                cb_aut_com_niv.getItems().clear();
+                for (int f = 0; f < autos_inventario.size(); f++){
+                    cb_aut_com_niv.getItems().addAll(autos_inventario.get(f).getNIV());
+                }
+                break;
+            } else if(txt_aut_inv_niv.getText().compareToIgnoreCase(autos_inventario.get(centro).getNIV()) <= -1){
+                sup=centro-1;
+            } else {
+                inf=centro+1;
+            }
+        }
     }
 
     //compras
